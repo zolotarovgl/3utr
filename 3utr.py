@@ -15,10 +15,13 @@ def main():
         subparsers = parser.add_subparsers(dest="command", help="Sub-command help")
 
         # Subcommand: get utr
-        parser_utrs = subparsers.add_parser("utrs", help="Extend functionality")
+        parser_utrs = subparsers.add_parser("utrs", help="Annotate utrs based on coverage")
         parser_utrs.add_argument('--cov', type=str, required=True, help='Coverage bed computed with 3utr.py coverage')
         parser_utrs.add_argument('--stop', type=str, required=True, help='Bed file containing stop codons')
+        parser_utrs.add_argument('--genes', type=str, required=True, help='Bed file containing gene regions')
         parser_utrs.add_argument('--out', type=str, required=True, help='Output file name')
+        parser_utrs.add_argument('--strand', type=str, choices=['unstranded', 'stranded'], required=True, help='Strand information for coverage calculation')
+        parser_utrs.add_argument('--temp', type=str, required=False, help='Name of temporary directory', default='tmp')
         parser_utrs.set_defaults(func=utrs_main)
 
         # Subcommand: coverage

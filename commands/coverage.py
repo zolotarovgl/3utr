@@ -89,7 +89,7 @@ def coverage_main(args):
     cpu_count = args.cpu
     temp = args.temp
 
-    logger.info(f"Coverage functionality executed with BAM file: {bam_file}, strand: {strand}, CPU count: {cpu_count}, Temp: {temp}")
+    logger.info(" --".join([f"{key} : {value}" for key, value in args.__dict__.items()]))
 
     try:
         check_temp(temp, logger)
