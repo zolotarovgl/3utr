@@ -78,7 +78,9 @@ def filter_and_merge(bedgraph, outfile, cov_threshold,strand,logger):
     elif strand == 'stranded':
         merge_sub = '-c 4,5,6 -o distinct,sum,distinct'
 
-    filter_and_merge_command = f"awk '$4>={cov_threshold}' {bedgraph}  | bedtools merge -i - {merge_sub} > {outfile}"
+    filter_and_merge_command = f"""
+    awk '$4>={cov_threshold}' {bedgraph}  | bedtools merge -i - {merge_sub} | awk 'BEGIN{{OFS="\\t"}}{{
+    $4="reg"NR;print $0}}'> {outfile}"""
     run_command(filter_and_merge_command, logger)
 
     if is_file_empty(outfile):

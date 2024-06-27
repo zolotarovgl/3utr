@@ -36,7 +36,15 @@ def outersect_with_genes(bed,genes_bed,output,tmp_ids,strand,logger):
     bedtools intersect -a {bed} -b {genes_bed} -wa -wb -s | \
     awk '{{print $4"\\t"$10}}' | cut -f 1 | sort | uniq -c | \
     awk '$1>1 {{print $2}}' > {tmp_ids}
-    awk 'BEGIN{{OFS="\\t"}} FNR==NR {{o[$1]=$1;next}}{{if(!($4 in o)){{print $0}}}}' {tmp_ids} {bed} > {output}
+
+	if [ -s {tmp_ids} ]; then
+        # The file is not-empty.
+    	awk 'BEGIN{{OFS="\\t"}} FNR==NR {{o[$1]=$1;next}}{{if(!($4 in o)){{print $0}}}}' {tmp_ids} {bed} > {output}
+	else
+        echo "No offending utrs found!"
+		cp {bed} {output}
+	fi
+
     """
     run_command(command,logger)
 
